@@ -1,8 +1,9 @@
 apiVersion: v2
 name: node-problem-detector
-description: Runs node-problem-detector on every node to report kernel problems as node conditions and events
+description: Runs node-problem-detector on every node to report kernel problems
+  as node conditions and events
 type: application
-version: 0.0.1
+version: 0.1.0
 appVersion: "v1.36.0"
 sources:
   - https://github.com/nscaledev/node-problem-detector-chart
