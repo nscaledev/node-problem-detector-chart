@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: node-problem-detector
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: node-problem-detector
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: node-problem-detector
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ .Release.Name }}
+      {{- /* NPD reports node problems, so it must be scheduled onto nodes that
+             are already full (e.g. when an upgrade adds it to a running
+             cluster) and must survive node-pressure eviction. */}}
+      priorityClassName: system-node-critical
+      nodeSelector:
+        kubernetes.io/os: linux
+      {{- /* Node pools accept arbitrary customer taints, including NoExecute,
+             and every node must be monitored. */}}
+      tolerations:
+        - operator: Exists
+      containers:
+        - name: node-problem-detector
+          image: registry.k8s.io/node-problem-detector/node-problem-detector:{{ .Chart.AppVersion }}
+          {{- /* Uses the monitor configs baked into the image at /config, so they
+                 always match the binary. The monitor set is pinned here
+                 rather than inherited from the image entrypoint. docker-monitor
+                 is left out: nodes run containerd, so it never matches and
+                 only sets a misleading CorruptDockerOverlay2 condition. */}}
+          command:
+            - /node-problem-detector
+            - --logtostderr
+            - --config.system-log-monitor=/config/kernel-monitor.json,/config/readonly-monitor.json
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          securityContext:
+            privileged: true
+          resources:
+            requests:
+              cpu: 10m
+              memory: 80Mi
+            limits:
+              cpu: 10m
+              memory: 80Mi
+          volumeMounts:
+            - name: kmsg
+              mountPath: /dev/kmsg
+              readOnly: true
+      volumes:
+        - name: kmsg
+          hostPath:
+            path: /dev/kmsg

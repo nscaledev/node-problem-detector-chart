@@ -1,0 +1,28 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.description" . }}
+
+## What This Chart Installs
+
+- A DaemonSet running [node-problem-detector](https://github.com/kubernetes/node-problem-detector)
+  on every Linux node, tolerating all taints. It reads `/dev/kmsg` with the monitor configs baked
+  into the image, so they always match the binary:
+
+  | Monitor | Node conditions |
+  |---------|-----------------|
+  | `kernel-monitor` | `KernelDeadlock`, `XfsShutdown`, `CperHardwareErrorFatal` |
+  | `readonly-monitor` | `ReadonlyFilesystem` |
+
+  Both monitors also emit kernel problems as events.
+- A ServiceAccount and a ClusterRoleBinding to the built-in `system:node-problem-detector`
+  ClusterRole, which kube-apiserver creates as part of its bootstrap RBAC policy.
+
+Nothing is configurable: the chart's only consumers are NKS platform releases, which pin a chart
+version immutably, so any change is a new chart release.
+
+## Upgrading node-problem-detector
+
+Bump `appVersion` in [Chart.yaml](Chart.yaml) in a `fix(deps):` or `feat:` commit. Release-please
+then opens the chart release PR.
+
+{{ template "helm-docs.versionFooter" . }}

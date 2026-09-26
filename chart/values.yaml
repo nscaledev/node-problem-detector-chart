@@ -1,0 +1,4 @@
+# This chart is intentionally not configurable: it is consumed only by NKS
+# platform releases, which pin a chart version immutably, so any change is a
+# new chart release. This file exists because helm-docs skips charts without
+# one.
