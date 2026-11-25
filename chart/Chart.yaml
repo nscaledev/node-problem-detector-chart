@@ -4,7 +4,7 @@ description: Runs node-problem-detector on every node to report kernel problems
   as node conditions and events
 type: application
 version: 0.1.0
-appVersion: "v1.36.0"
+appVersion: "v1.36.1"
 sources:
   - https://github.com/nscaledev/node-problem-detector-chart
   - https://github.com/kubernetes/node-problem-detector
