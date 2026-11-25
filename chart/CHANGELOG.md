@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.1](https://github.com/nscaledev/node-problem-detector-chart/compare/node-problem-detector-0.1.0...node-problem-detector-0.1.1) (2026-11-25)
+
+
+### Bug Fixes
+
+* **deps:** upgrade node-problem-detector to v1.36.1 ([ce4ceec](https://github.com/nscaledev/node-problem-detector-chart/commit/ce4ceec30809f81a5132407b95bc0e1ecc4d5972))
+* **deps:** upgrade node-problem-detector to v1.36.1 ([cc16afe](https://github.com/nscaledev/node-problem-detector-chart/commit/cc16afe72ff53d862a580241afa4757770e3e087))
+
 ## [0.1.0](https://github.com/nscaledev/node-problem-detector-chart/compare/node-problem-detector-0.0.1...node-problem-detector-0.1.0) (2026-09-26)
 
 
